@@ -4,11 +4,12 @@ consumer.py
 This file contains the logic for a Consumer that continuously reads messages
 from the queue and processes them.
 
-The Consumer runs forever, just like a streaming system.
+The Consumer waits for events until it receives None as a stop signal.
 """
 
 import time
 from queue import Queue
+
 
 class Consumer:
     def __init__(self, q):
@@ -16,33 +17,28 @@ class Consumer:
         PARAMETERS:
         - q : the shared queue (simulated topic)
 
-        TODO:
-        - Store the queue.
-        - Initialize any state variables you may want later,
-          e.g. a running total for stateful computations.
         """
-        
+        self.q = q
 
     def start(self):
         """
-        Main loop of the consumer.
-
-        TODO:
-        - Continuously call q.get() to receive events.
-        - Print the event received.
-        - Pass it to the process() function.
+        Wait for events from the queue and process them one at a time.
         """
-    
+        while True:
+            event = self.q.get()
+            if event is None:
+                break
+            print(f"Consumed: {event}")
+            self.process(event)
 
     def process(self, event):
         """
-        TODO:
-        - Simulate some processing time using time.sleep().
-        - Transform fields (e.g., convert amount to float).
-        - Implement optional filtering conditions.
-        - Update any state (example: running total).
+        Convert the amount to a number and simulate a little processing time.
         """
-   
+        amount = float(event["amount"])
+        print(f"Processed amount: {amount:.2f}")
+        time.sleep(0.5)
+
 
 # Debugging test
 
@@ -54,4 +50,5 @@ if __name__ == "__main__":
     """
     q = Queue()
     consumer = Consumer(q)
+    print("Waiting for events... Press Ctrl+C to stop.")
     consumer.start()
