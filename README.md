@@ -65,7 +65,7 @@ It:
 
 ## How to Run the Lab
 
-Run the full pipeline:
+From the project folder, run the full pipeline:
 
 ```bash
 python pipeline.py
@@ -95,16 +95,6 @@ Press **Ctrl+C** to stop a run early.
 
 The queue is shared in memory. Running `producer.py` and `consumer.py` in separate
 terminals creates separate queues; use `pipeline.py` to connect them.
-
-### Check the lab
-
-```bash
-python -m unittest -v
-```
-
-The tests check that all 200 transactions are produced and consumed in order,
-that amounts are displayed correctly, and that the consumer handles the stop
-signal. They skip the simulated delays so the checks finish quickly.
 
 ---
 

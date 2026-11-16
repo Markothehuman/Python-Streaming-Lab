@@ -1,23 +1,12 @@
-"""
-pipeline.py
-----------------
-This file launches BOTH producer and consumer using Python threads to simulate
-a real streaming pipeline.
-
-"""
-
 import threading
-from pathlib import Path
 from queue import Queue
 from producer import CSVProducer
 from consumer import Consumer
 
 
 def main():
-    """Run both workers, then wait until every CSV row has been processed."""
     q = Queue()
-    csv_path = Path(__file__).with_name("transactions.csv")
-    producer = CSVProducer(csv_path, q)
+    producer = CSVProducer("transactions.csv", q)
     consumer = Consumer(q)
 
     producer_thread = threading.Thread(target=producer.start, daemon=True)
@@ -26,9 +15,8 @@ def main():
     consumer_thread.start()
     producer_thread.start()
 
-    # Wait until every row has been sent, then tell the consumer to stop.
     producer_thread.join()
-    q.put(None)
+    q.put(None)  # Tell the consumer there are no more rows.
     consumer_thread.join()
     print("Pipeline complete: all transactions processed.")
 
